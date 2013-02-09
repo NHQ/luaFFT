@@ -1,16 +1,17 @@
 luafft = require "luafft"
 
 local signal = {}
-local size = next_possible_size(2*2048+1)
-local frequency = 1024
+local size = next_possible_size(44000 - 1)
+local frequency = 44100
+local T = 4096
 local length = size / frequency
-
---size = next_size(size)
+print(size);
+print(length);
 
 --Populates a list with random real numbers in complex format
 function populate(list)
   for i=1,size do
-	  list[i] = complex.new(math.sin(2* i/frequency * 2*math.pi) + math.sin(10* i/frequency * 2*math.pi), 0)--complex.new(math.random(), 0)
+	  list[i] = complex.new(math.sin(i / frequency * 2 * math.pi * 440) + (2 * math.sin(i / frequency * 2 * math.pi * 4880)), 0)
   end
 end
 
@@ -40,7 +41,7 @@ local spec = fft(signal, false)
 reconstructed = fft(spec, true)
 
 --After retransformation, we need to devide by the data size
-devide(reconstructed, size)
+--devide(reconstructed, size)
 devide(spec, size/2)
 
 --Displays the fourier spectrum of the audio signal
